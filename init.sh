@@ -6,14 +6,14 @@ set -e -o pipefail
 
 nodes='node1 node2'
 
-if false; then
-	ssh root@${node}.lxc yum -y update
-	ssh root@${node}.lxc rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+if true; then
+	ssh root@puppet.lxc yum -y update
+	ssh root@puppet.lxc rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 	ssh root@puppet.lxc yum -y install puppet-server
 	
 	ssh root@puppet.lxc yum -y install rsync
 
-	puppet resource package puppet-server ensure=latest
+	ssh root@puppet.lxc puppet resource package puppet-server ensure=latest
 
 	scp ./puppet.master.conf root@puppet.lxc:/etc/puppet/puppet.conf
 	ssh root@puppet.lxc puppet master --verbose --no-daemonize	
@@ -22,7 +22,7 @@ if false; then
 fi
 
 for node in $nodes; do
-	if false; then
+	if true; then
 		ssh root@${node}.lxc yum -y update
 		ssh root@${node}.lxc rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 		ssh root@${node}.lxc yum -y install puppet

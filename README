@@ -1,0 +1,7 @@
+These need to be in the lxc config file
+
+lxc.mount.auto = cgroup
+lxc.aa_profile = lxc-container-default-with-nesting
+
+lxc.aa_profile = unconfined
+
