@@ -64,6 +64,17 @@ Vagrant.configure(2) do |config|
     
     node.vm.provision "shell", inline: <<-SHELL
      sudo yum -y update
+     sudo rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm || true
+     sudo yum -y install puppet-server rsync
+     sudo puppet resource package puppet-server ensure=latest
+    SHELL
+
+    node.vm.provision "file", source: "./puppet.master.conf", destination: "/tmp/puppet.conf"
+    node.vm.provision "file", source: "./hosts.master", destination: "/tmp/hosts"
+
+    node.vm.provision "shell", inline: <<-SHELL
+      sudo cp /tmp/puppet.conf /etc/puppet/puppet.conf
+      sudo cp /tmp/hosts /etc/hosts
     SHELL
   end
 
@@ -84,6 +95,17 @@ Vagrant.configure(2) do |config|
       
       node.vm.provision "shell", inline: <<-SHELL
        sudo yum -y update
+       sudo rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm || true
+       sudo yum -y install puppet
+       sudo puppet resource package puppet ensure=latest
+      SHELL
+
+      node.vm.provision "file", source: "./puppet.node.conf", destination: "/tmp/puppet.conf"
+      node.vm.provision "file", source: "./hosts.node", destination: "/tmp/hosts"
+
+      node.vm.provision "shell", inline: <<-SHELL
+        sudo cp /tmp/puppet.conf /etc/puppet/puppet.conf
+        sudo cp /tmp/hosts /etc/hosts
       SHELL
     end
   end
