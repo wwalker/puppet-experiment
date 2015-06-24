@@ -19,7 +19,13 @@ vagrant up --no-parallel
 
 #ssh -F ssh.config
 
+# host ports
+readonly hp_puppet='root@10.11.1.2'
+
 case "${1}" in
+	copy-ssh)
+		
+		;;
 	init-tls)
 		vagrant ssh puppet -c 'sudo puppet master --verbose --no-daemonize'
 		;;
@@ -32,6 +38,14 @@ case "${1}" in
 		;;
 	signcert)
 		vagrant ssh puppet -c 'sudo puppet cert sign --all'
+		;;
+	sync)
+		rsync -avx -e ssh --delete ./puppet-master/ ${hp_puppet}:/etc/puppet/
+		vagrant ssh puppet -c 'sudo puppet agent --test'
+		vagrant ssh node1 -c 'sudo puppet agent --test'
+		;;
+	revsync)
+		rsync -avx -e ssh --delete ${hp_puppet}:/etc/puppet/ ./puppet-master/
 		;;
 	*)
 		echo "unknown command: ${1}" >&2

@@ -1,4 +1,4 @@
-
+# -*- mode: ruby -*-
 node default {
   package { "tar":
     ensure => "installed"
