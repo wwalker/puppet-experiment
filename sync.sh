@@ -6,6 +6,6 @@ readonly pm_host=$(gcloud compute instances describe puppet --format json|jq -r 
 
 rsync -avx -e ssh --delete ./puppet-master/ "${pm_host}":puppet/
 	
-for node in puppet node1 node2 node3; do
-	ssh root@${node}.lxc puppet agent --test
-done
+#for node in puppet node1 node2 node3; do
+#	ssh root@${node}.lxc puppet agent --test
+#done
