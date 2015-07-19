@@ -1,9 +1,29 @@
 #!/bin/bash
 
-rpm -ivh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm/tmp/epel-release-6-8.noarch.rpm
+if [[ -e /root/.startup.script.run ]]; then
+	echo "Skipping startup because /root/.startup.script.run exists"
+	exit 0
+fi
+
+## this should be part of the centos-6-nose image
+sed -i '/^SELINUX=/c\SELINUX=disabled' /etc/sysconfig/selinux
+sed -i '/^SELINUX=/c\SELINUX=disabled' /etc/selinux/config
+
+setenforce 0 || echo "can't setenforce 0"
+
+###################
+# COMMON
+
+yum -y install epel-release
 rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 
+yum -y install curl jq nmap ntp ntpdate rsync tar vim-enhanced wget 
+
 yum -y update
+
+###################
+# NODE
+
 yum -y install puppet
 puppet resource package puppet ensure=latest
 
@@ -40,3 +60,6 @@ EOF
 
 puppet resource service puppet ensure=running enable=true
 
+
+#################
+touch /root/.startup.script.run

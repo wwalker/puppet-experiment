@@ -1,10 +1,32 @@
 #!/bin/bash
 
-rpm -ivh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm/tmp/epel-release-6-8.noarch.rpm
+if [[ -e /root/.startup.script.run ]]; then
+	echo "Skipping startup because /root/.startup.script.run exists"
+	exit 0
+fi
+
+## this should be part of the centos-6-nose image
+sed -i '/^SELINUX=/c\SELINUX=disabled' /etc/sysconfig/selinux
+sed -i '/^SELINUX=/c\SELINUX=disabled' /etc/selinux/config
+
+setenforce 0 || echo "can't setenforce 0"
+
+###################
+# COMMON
+
+yum -y install epel-release
 rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 
+yum -y install curl git jq nmap ntp ntpdate rsync tar vim-enhanced wget 
+
 yum -y update
-yum -y install puppet-server rsync
+
+###################
+# MASTER
+
+yum -y install epel-release
+
+yum -y install puppet-server
 puppet resource package puppet-server ensure=latest
 
 cat <<'EOF' > /etc/puppet/puppet.conf
@@ -21,7 +43,8 @@ cat <<'EOF' > /etc/puppet/puppet.conf
     # The default value is '$confdir/ssl'.
     ssldir = $vardir/ssl
 
-    dns_alt_names = puppet
+    server = puppet
+    dns_alt_names = puppet,puppet.c.puppet-experiment.internal
 
     runinterval = 1m
 
@@ -40,8 +63,11 @@ cat <<'EOF' > /etc/puppet/puppet.conf
 EOF
 
 puppet resource service puppetmaster ensure=running enable=true
+puppet resource service puppet ensure=running enable=true
 
 ## manual ##
 # puppet cert list
 # puppet cert sign --all
 
+#################
+touch /root/.startup.script.run

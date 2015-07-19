@@ -1,22 +1,38 @@
 # -*- mode: puppet -*-
 
 class common {
+  class { 'timezone':
+    region   => 'America',
+    locality => 'Chicago',
+  }
+
+  package { "curl":
+    ensure => "installed"
+  }
   package { "jq":
     ensure => "installed"
   }
-  package { "libcgroup":
+  package { "nmap":
+    ensure => "installed"
+  }
+  package { "ntp":
+    ensure => "installed"
+  }
+  package { "ntpdate":
+    ensure => "installed"
+  }
+  package { "rsync":
     ensure => "installed"
   }
   package { "tar":
     ensure => "installed"
   }
-
-  service { "cgconfig":
-    ensure => "running",
-    enable => true,
+  package { "vim-enhanced":
+    ensure => "installed"
   }
-
-  include docker
+  package { "wget":
+    ensure => "installed"
+  }
 }
 
 class consul_server {
@@ -59,13 +75,19 @@ node 'puppet' {
   include consul_server
 }
 
-node 'node1','node2', 'node3' {
+node 'padm1' {
+  include common
+  include consul_server
+}
+
+node 'pnode1', 'pnode2', 'pnode3' {
   include common
   include consul_agent
 }
 
 node default {
   include common
+  include consul_agent
 }
 
 #node 'node1' {
