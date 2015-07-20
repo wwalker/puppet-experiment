@@ -29,9 +29,7 @@ Get back to your host machine:
 # Create our infra
 
     gcloud compute instances create puppet --image centos-6-nose --machine-type g1-small --metadata-from-file startup-script=gce-init/startup.master.sh
-    for node in node{1,2,3}; do
-	    gcloud compute instances create "${node}" --image centos-6-nose --machine-type g1-small --metadata-from-file startup-script=gce-init/startup.node.sh
-    done
+    gcloud compute instances create node1 node2 node3 --image centos-6-nose --machine-type g1-small --metadata-from-file startup-script=gce-init/startup.node.sh
  
 Examine what we've built:
 
@@ -68,7 +66,7 @@ ROOT: Do the git clone:
 
 ROOT: Auto clone $HOME/puppet/ to /etc/puppet/
 
-    puppet resource cron puppetclone environment='PATH=/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin' command='cd /root/puppet && git checkout master && git reset --hard origin/master && git pull && touch .last_pulled && rsync -avx /root/puppet/puppet-master/ /etc/puppet/' user=root minute='*/1'
+    puppet resource cron puppetclone environment='PATH=/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin' command='cd /root/puppet && git checkout master && git reset --hard origin/master && git pull && sync && touch .last_pulled && rsync --delete -avxHW /root/puppet/puppet-master/ /etc/puppet/ && sync' user=root minute='*/1'
 
 This makes:
 
