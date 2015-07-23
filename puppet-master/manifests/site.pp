@@ -38,31 +38,36 @@ class common {
   }
 }
 
-class consul_server {
-#  file { "/opt/staging/consul/consul.zip":
-#    ensure => absent
-#  }
-#  file { "/opt/staging/consul/consul_ui.zip":
-#    ensure => absent
-#  }
-#  file { "/usr/local/bin/consul":
-#    ensure => absent
-#  }
-#  file { "/opt/consul/ui":
-#    ensure => absent
-#  }
+class consul_purge {
+  service { 'consul' :
+    ensure => stopped,
+  }
 
+  file { "/etc/init.d/consul":
+    ensure => absent,
+  }
+  file { "/usr/local/bin/consul":
+    ensure => absent,
+  }
+  file { "/opt/staging":
+    ensure => absent,
+    force => yes,
+  }
+  file { "/etc/consul":
+    ensure => absent,
+    force => yes,
+  }
+  file { "/opt/consul":
+    ensure => absent,
+    force => yes,
+  }
+}
+
+class consul_server {
   class { "::consul":
-#    version => "0.5.2",
-#    package_name      => "consul-0.5.2",
-#    ui_package_name   => "consul-ui-0.5.2",
-#    download_url      => "https://dl.bintray.com/mitchellh/consul/0.5.2_linux_amd64.zip",
-#    ui_download_url   => "https://dl.bintray.com/mitchellh/consul/0.5.2_web_ui.zip",
-    config_hash => {
+    config_defaults => hiera_hash('consul::config_hash'),
+    config_hash          => {
       "bootstrap_expect" => 1,
-      "data_dir"         => "/opt/consul",
-      "datacenter"       => "dc1",
-      "log_level"        => "INFO",
       "node_name"        => $hostname,
       "server"           => true,
       "ui_dir"           => "/opt/consul/ui",
@@ -73,23 +78,9 @@ class consul_server {
 }
 
 class consul_agent {
-#  file { "/opt/staging/consul/consul.zip":
-#    ensure => absent
-#  }
-#  file { "/opt/staging/consul/consul_ui.zip":
-#    ensure => absent
-#  }
-
   class { "::consul":
-#    version => "0.5.2",
-#    package_name      => "consul-0.5.2",
-#    ui_package_name   => "consul-ui-0.5.2",
-#    download_url      => "https://dl.bintray.com/mitchellh/consul/0.5.2_linux_amd64.zip",
-#    ui_download_url   => "https://dl.bintray.com/mitchellh/consul/0.5.2_web_ui.zip",
+    config_defaults => hiera_hash('consul::config_hash'),
     config_hash => {
-      "data_dir"       => "/opt/consul",
-      "datacenter"     => "dc1",
-      "log_level"      => "INFO",
       "node_name"      => $hostname,
       "retry_join"     => [$serverip],
       "advertise_addr" => $ipaddress_eth0,
@@ -122,6 +113,7 @@ class rboyer_vault(
 node "puppet" {
   include common
   include consul_server
+  #include consul_purge
 
   service { "puppet":
     ensure => "running",
@@ -155,6 +147,7 @@ node "puppet" {
 node "node1", "node2", "node3" {
   include common
   include consul_agent
+#  include consul_purge
 
   service { "puppet":
     ensure => "running",

@@ -1,2 +1,11 @@
 ---
 consul::version: "0.5.2"
+# the version doesn't actually do the right thing in the consul module
+consul::download_url: "https://dl.bintray.com/mitchellh/consul/%{hiera('consul::version')}_linux_amd64.zip"
+consul::ui_download_url: "https://dl.bintray.com/mitchellh/consul/%{hiera('consul::version')}_web_ui.zip"
+
+consul::config_hash:
+  datacenter: "gce"
+  data_dir: "/opt/consul"
+  log_level: "INFO"
+ 

@@ -2,11 +2,11 @@
 :backends:
   - yaml
 :hierarchy:
-  - "nodes/%{trusted.certname}"
-  - "environment/%{server_facts.environment}"
+  - "nodes/%{::clientcert}"
+  - "environment/%{::environment}"
   - common
-#  - "%{clientcert}"
-#  - "%{environment}"
-
+#  - "nodes/%{trusted.certname}"
+#  - "environment/%{server_facts.environment}"
 :yaml:
   :datadir: "/etc/puppet/hieradata"
+:merge_behavior: deeper
