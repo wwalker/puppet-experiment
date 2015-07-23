@@ -1,0 +1,23 @@
+{
+  "Gemfile": "a69e2a070fe85765b06c1ef199fc2948",
+  "README.md": "3e48aaa089f241227634a1df25242b99",
+  "Rakefile": "09f508de780bbe3d22ad12ff4a4736d4",
+  "manifests/ca.pp": "bf624337c9cb7bf7834c749259ffb790",
+  "manifests/init.pp": "4c5f57e8d5920eb2d93f373a72e6540c",
+  "manifests/params.pp": "f1f80f4417feb7abc526c8c83fe78041",
+  "manifests/update.pp": "caa0ad59129418561451cc8311ebdd9a",
+  "metadata.json": "25151c7f15a9438c3f6f82ca9d7ef0d3",
+  "spec/acceptance/ca_cert_ca_spec.rb": "38716dce5728e8c91408c79f23ac8271",
+  "spec/acceptance/class_spec.rb": "d6f02e270eda558d4dd0c4cd1be43f7f",
+  "spec/acceptance/nodesets/centos-6-x64.yml": "be18945c2c5c596a73d65b7d0d44aa97",
+  "spec/acceptance/nodesets/default.yml": "7e2b5fea1318917282ba316c00b9efdf",
+  "spec/acceptance/nodesets/ubuntu-12-04.yml": "c4816e287662f9c8444709c0c92600f0",
+  "spec/classes/ca_cert_spec.rb": "3e18b2ac3df948a6477beb6a8c806de0",
+  "spec/classes/params_spec.rb": "5c997193b526fd2d922db7da234c574a",
+  "spec/classes/update_spec.rb": "1c574d42c24d47a944711d5ae042f879",
+  "spec/defines/ca_spec.rb": "1da9bd2364681019d7fc2c9ab8a43773",
+  "spec/spec_helper.rb": "4645320b3843cfe283ef0f86d1c3feec",
+  "spec/spec_helper_acceptance.rb": "53d3c6bbb3c6494f45ac86acf833971f",
+  "tests/ca.pp": "404dc265e6c278d87a02952b26b3860a",
+  "tests/init.pp": "033bf26cf9e385cd68d006e151aa03b9"
+}

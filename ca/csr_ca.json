@@ -1,0 +1,16 @@
+{
+    "key": {
+        "algo": "rsa",
+        "size": 4096
+    },
+    "CN": "Penguin Farmers Root CA",
+    "names": [
+        {
+            "C": "US",
+            "L": "Austin",
+            "O": "Penguin Farmers",
+            "OU": "Penguin Farmers Certificate Authority",
+            "ST": "Texas"
+        }
+    ]
+}
