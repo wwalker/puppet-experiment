@@ -72,7 +72,7 @@ node 'node2', 'node3' {
 
 # centos 7
 node 'node4' {
-  include common
+  include role_execute
 }
 
 node default {
