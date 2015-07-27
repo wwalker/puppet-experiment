@@ -1,9 +1,28 @@
-# -*- mode: markdown -*-
-
 # First pin ourselves to a specific region and zone
 
     gcloud config set compute/region us-central1
     gcloud config set compute/zone us-central1-a
+
+# Create base image for centos 7 without selinux
+
+    gcloud compute instances create centos-7-nose --image centos-7 --machine-type g1-small
+    gcloud compute ssh centos-7-nose
+
+Now once you're in the box:
+
+    sudo su
+    sed -i '/^SELINUX=/c\SELINUX=disabled' /etc/sysconfig/selinux
+    sed -i '/^SELINUX=/c\SELINUX=disabled' /etc/selinux/config
+    setenforce 0 || echo "can't setenforce 0"
+	reboot
+	getenforce
+	poweroff
+
+Get back to your host machine:
+
+    gcloud compute instances delete centos-7-nose --keep-disks boot
+    gcloud compute images create centos-7-nose --source-disk centos-7-nose 
+    gcloud compute disks delete centos-7-nose
 
 # Create base image for centos 6 without selinux
 
@@ -30,7 +49,9 @@ Get back to your host machine:
 
     gcloud compute instances create puppet --image centos-6-nose --machine-type g1-small --metadata-from-file startup-script=gce-init/startup.master.sh
     gcloud compute instances create node1 node2 node3 --image centos-6-nose --machine-type g1-small --metadata-from-file startup-script=gce-init/startup.node.sh
- 
+
+    gcloud compute instances create node4 --image centos-7-nose --machine-type g1-small --metadata-from-file startup-script=gce-init/startup.node7.sh
+
 Examine what we've built:
 
     gcloud compute instances list

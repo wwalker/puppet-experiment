@@ -1,5 +1,6 @@
 # -*- mode: puppet -*-
 
+# centos 6
 node "puppet" {
   include common
   include consul_agent
@@ -59,12 +60,19 @@ class role_execute {
   }
 }
 
+# centos 6
 node 'node1' {
   include role_control
 }
 
+# centos 6
 node 'node2', 'node3' {
   include role_execute
+}
+
+# centos 7
+node 'node4' {
+  include common
 }
 
 node default {
